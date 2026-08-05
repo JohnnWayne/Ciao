@@ -1,1 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciaaaaao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Grotesk:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060606;
+    --panel:#0a0a0b;
+    --amber:#FFC53D;
+    --amber-glow: rgba(255,197,61,.55);
+    --coral:#FF4D5E;
+    --muted:#787d86;
+    --line: rgba(255,255,255,.1);
+  }
 
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--amber);
+    font-family:'IBM Plex Mono', monospace;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  body{ padding:24px; }
+
+  .board{
+    width:100%;
+    max-width:760px;
+    background:
+      radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.4px) 0 0/6px 6px,
+      var(--panel);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:10px;
+    box-shadow:0 30px 70px -25px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.02);
+    padding:clamp(20px,4vw,36px);
+  }
+
+  .title-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding-bottom:14px;
+    border-bottom:2px solid var(--line);
+    margin-bottom:22px;
+  }
+
+  .plane{
+    width:26px; height:26px;
+    fill:var(--coral);
+    transform:rotate(-45deg);
+    flex-shrink:0;
+    filter: drop-shadow(0 0 6px rgba(255,77,94,.5));
+  }
+
+  .title{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(24px,5vw,34px);
+    letter-spacing:.02em;
+    color:var(--coral);
+    text-transform:uppercase;
+    text-shadow:0 0 14px rgba(255,77,94,.35);
+  }
+
+  .headers{
+    display:flex;
+    justify-content:center;
+    gap:clamp(28px,7vw,64px);
+    margin-bottom:6px;
+  }
+  .headers span{
+    font-size:11px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--muted);
+    width:clamp(90px,20vw,150px);
+    text-align:center;
+    display:inline-block;
+  }
+
+  .rule{
+    border:none;
+    border-top:1px solid var(--line);
+    margin:0 0 18px;
+  }
+
+  .countdown{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(10px,3vw,22px);
+  }
+
+  .unit{
+    font-family:'VT323', monospace;
+    font-weight:400;
+    font-size:clamp(64px,17vw,120px);
+    letter-spacing:.03em;
+    width:clamp(90px,20vw,150px);
+    line-height:1;
+    text-align:center;
+    color:#FFD400;
+  }
+
+  .colon{
+    font-family:'VT323', monospace;
+    font-weight:400;
+    font-size:clamp(48px,12vw,84px);
+    color:#FFD400;
+    opacity:.5;
+    animation: blink 1s steps(2) infinite;
+  }
+  @keyframes blink{ 0%,100%{ opacity:.6; } 50%{ opacity:.15; } }
+
+  .finished{
+    display:none;
+    text-align:center;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(22px,5vw,32px);
+    color:var(--amber);
+    text-shadow:0 0 16px var(--amber-glow);
+    letter-spacing:.03em;
+  }
+
+  .board.done .countdown,
+  .board.done .headers,
+  .board.done .rule{ display:none; }
+  .board.done .finished{ display:block; padding:20px 0; }
+
+  @media (prefers-reduced-motion: reduce){
+    .unit.flicker, .colon{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="board" id="board">
+  <div class="title-row">
+    <svg class="plane" viewBox="0 0 24 24"><path d="M22 12L2 4l3 8-3 8z"/></svg>
+    <span class="title">Ciaaaaao</span>
+  </div>
+
+  <div class="headers">
+    <span>Heures</span>
+    <span>Minutes</span>
+    <span>Secondes</span>
+  </div>
+  <hr class="rule">
+
+  <div class="countdown" id="countdown" aria-live="polite">
+    <span class="unit" id="h">00</span>
+    <span class="colon">:</span>
+    <span class="unit" id="m">00</span>
+    <span class="colon">:</span>
+    <span class="unit" id="s">00</span>
+  </div>
+
+  <p class="finished" id="finished">Bon voyage ☀️</p>
+</main>
+
+<script>
+(function(){
+  var TARGET = new Date(2026, 7, 7, 17, 0, 0); // 7 août 2026, 17h00, heure locale du navigateur
+  var elH = document.getElementById('h');
+  var elM = document.getElementById('m');
+  var elS = document.getElementById('s');
+  var board = document.getElementById('board');
+  var prev = { h:null, m:null, s:null };
+
+  function setUnit(el, key, val){
+    var padded = String(Math.max(0,val)).padStart(2,'0');
+    if(prev[key] !== padded){
+      el.textContent = padded;
+      if(prev[key] !== null){
+        el.classList.remove('flicker');
+        void el.offsetWidth;
+        el.classList.add('flicker');
+      }
+      prev[key] = padded;
+    }
+  }
+
+  function tick(){
+    var diff = TARGET - new Date();
+    if(diff <= 0){
+      setUnit(elH,'h',0); setUnit(elM,'m',0); setUnit(elS,'s',0);
+      board.classList.add('done');
+      clearInterval(interval);
+      return;
+    }
+    var totalSeconds = Math.floor(diff/1000);
+    setUnit(elH,'h', Math.floor(totalSeconds/3600));
+    setUnit(elM,'m', Math.floor((totalSeconds%3600)/60));
+    setUnit(elS,'s', totalSeconds%60);
+  }
+
+  tick();
+  var interval = setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
