@@ -13,8 +13,8 @@
     --amber:#FFC53D;
     --amber-glow: rgba(255,197,61,.55);
     --coral:#FF4D5E;
-    --muted:#787d86;
-    --line: rgba(255,255,255,.14);
+    --muted:#8f95a1;
+    --line: rgba(0,0,0,.1);
   }
 
   *{ box-sizing:border-box; }
@@ -43,12 +43,12 @@
     width:100%;
     max-width:760px;
     background:
-      radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.4px) 0 0/6px 6px,
-      rgba(10,10,11,.86);
+      radial-gradient(rgba(0,0,0,.045) 1px, transparent 1.4px) 0 0/6px 6px,
+      rgba(255,255,255,.96);
     backdrop-filter: blur(6px);
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid rgba(0,0,0,.08);
     border-radius:10px;
-    box-shadow:0 30px 70px -25px rgba(0,0,0,.85), inset 0 0 0 1px rgba(255,255,255,.02);
+    box-shadow:0 30px 70px -25px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.4);
     padding:clamp(20px,4vw,36px);
     padding-top:clamp(56px,9vw,84px);
     margin-top:clamp(50px,10vw,90px);
@@ -76,8 +76,8 @@
     z-index:2;
   }
   .fullscreen-btn:hover, .fullscreen-btn:focus-visible{
-    color:#FFD400;
-    background:rgba(255,255,255,.06);
+    color:#ff4385;
+    background:rgba(0,0,0,.05);
   }
   .fullscreen-btn svg{ width:16px; height:16px; }
   .fullscreen-btn .icon-exit{ display:none; }
@@ -141,15 +141,15 @@
     width:clamp(90px,20vw,150px);
     line-height:1;
     text-align:center;
-    color:#FFD400;
+    color:#ff4385;
   }
 
   .colon{
     font-family:'VT323', monospace;
     font-weight:400;
     font-size:clamp(48px,12vw,84px);
-    color:#FFD400;
-    opacity:.5;
+    color:#ff4385;
+    opacity:.6;
     animation: blink 1s steps(2) infinite;
   }
   @keyframes blink{ 0%,100%{ opacity:.6; } 50%{ opacity:.15; } }
@@ -160,9 +160,8 @@
     font-family:'Space Grotesk', sans-serif;
     font-weight:700;
     font-size:clamp(28px,7vw,46px);
-    color:#FFD400;
+    color:#ff4385;
     letter-spacing:.02em;
-    text-shadow:0 0 20px rgba(255,214,0,.4);
     line-height:1.25;
   }
 
